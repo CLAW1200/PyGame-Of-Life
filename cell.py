@@ -16,7 +16,8 @@ class Game:
             'P: Randomize Colours',
             'Up Arrow/MScroll: Speed Up',
             'Down Arrow/MScroll: Slow Down',
-            'Right Arrow: Next Generation'
+            'Right Arrow: Next Generation',
+            'H: Toggle UI'
             ]
 
         self.width = width
@@ -39,6 +40,7 @@ class Game:
         self.alive_colour = (255, 255, 255)
         self.dead_colour = (0, 0, 0)
         self.text_colour = (255, 255, 255)
+        self.text = True
         self.setup()
 
     def random_colour(self):
@@ -135,6 +137,8 @@ class Game:
                     self.speed_up_game()
                 if event.key == pygame.K_DOWN:
                     self.slow_down_game()
+                if event.key == pygame.K_h:
+                    self.toggle_text()
                 
     def update(self):
         if self.randomize:
@@ -220,20 +224,23 @@ class Game:
         self.text_colour = (255 - self.dead_colour[0], 255 - self.dead_colour[1], 255 - self.dead_colour[2])
         self.screen.fill((0, 0, 0))
         self.grid.draw()
-        self.draw_text('Generation: ' + str(self.generation), 23, self.text_colour, 10, 10)
-        self.draw_text('Update Speed: ' + str(100 - self.update_delay) + '/100', 23, self.text_colour, 10, 40)
 
-        self.draw_text(str(self.controls[0]), 12, self.text_colour, 10, 100)
-        self.draw_text(str(self.controls[1]), 12, self.text_colour, 10, 120)
-        self.draw_text(str(self.controls[2]), 12, self.text_colour, 10, 140)
-        self.draw_text(str(self.controls[3]), 12, self.text_colour, 10, 160)
-        self.draw_text(str(self.controls[4]), 12, self.text_colour, 10, 180)
-        self.draw_text(str(self.controls[5]), 12, self.text_colour, 10, 200)
-        self.draw_text(str(self.controls[6]), 12, self.text_colour, 10, 220)
-        self.draw_text(str(self.controls[7]), 12, self.text_colour, 10, 240)
-        self.draw_text(str(self.controls[8]), 12, self.text_colour, 10, 260)
-        self.draw_text(str(self.controls[9]), 12, self.text_colour, 10, 280)
-        self.draw_text(str(self.controls[10]), 12, self.text_colour, 10, 300)
+        if self.text:
+            self.draw_text('Generation: ' + str(self.generation), 23, self.text_colour, 10, 10)
+            self.draw_text('Update Speed: ' + str(100 - self.update_delay) + '/100', 23, self.text_colour, 10, 40)
+
+            self.draw_text(str(self.controls[0]), 12, self.text_colour, 10, 100)
+            self.draw_text(str(self.controls[1]), 12, self.text_colour, 10, 120)
+            self.draw_text(str(self.controls[2]), 12, self.text_colour, 10, 140)
+            self.draw_text(str(self.controls[3]), 12, self.text_colour, 10, 160)
+            self.draw_text(str(self.controls[4]), 12, self.text_colour, 10, 180)
+            self.draw_text(str(self.controls[5]), 12, self.text_colour, 10, 200)
+            self.draw_text(str(self.controls[6]), 12, self.text_colour, 10, 220)
+            self.draw_text(str(self.controls[7]), 12, self.text_colour, 10, 240)
+            self.draw_text(str(self.controls[8]), 12, self.text_colour, 10, 260)
+            self.draw_text(str(self.controls[9]), 12, self.text_colour, 10, 280)
+            self.draw_text(str(self.controls[10]), 12, self.text_colour, 10, 300)
+            self.draw_text(str(self.controls[11]), 12, self.text_colour, 10, 320)
 
         pygame.display.update()
 
@@ -241,6 +248,14 @@ class Game:
         font = pygame.font.SysFont('Consolas', size)
         text = font.render(text, True, colour)
         self.screen.blit(text, (x, y))
+
+    def toggle_text(self): 
+        if self.text:
+            self.text = False
+        else:
+            self.text = True
+
+
 
     def start(self):
         self.run()
