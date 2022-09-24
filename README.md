@@ -25,4 +25,4 @@ Controls:
 
 - Right Arrow: Next Generation
 
-- Toggle UI
+- H: Toggle UI
