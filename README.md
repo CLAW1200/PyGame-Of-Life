@@ -24,3 +24,5 @@ Controls:
 - Down Arrow/MScroll: Slow Down
 
 - Right Arrow: Next Generation
+
+- Toggle UI
