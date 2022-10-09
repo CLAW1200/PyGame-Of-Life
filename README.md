@@ -26,3 +26,5 @@ Controls:
 - Right Arrow: Next Generation
 
 - H: Toggle UI
+
+- Esc: Quit

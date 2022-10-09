@@ -4,7 +4,6 @@ import random
 class Game:
     def __init__(self, width, height, cell_size):
         pygame.init()
-
         self.controls = [
             'Left Click: Place Cell',
             'Right Click: Remove Cell',
@@ -17,17 +16,19 @@ class Game:
             'Up Arrow/MScroll: Speed Up',
             'Down Arrow/MScroll: Slow Down',
             'Right Arrow: Next Generation',
-            'H: Toggle UI'
+            'H: Toggle UI',
+            'Esc: Quit'
             ]
 
         self.width = width
         self.height = height
         self.cell_size = cell_size
+        #self.screen = pygame.display.set_mode((self.width, self.height), pygame.FULLSCREEN)
         self.screen = pygame.display.set_mode((self.width, self.height))
         self.grid = Grid(self.width, self.height, self.cell_size, self.screen)
         self.running = True
         self.clock = pygame.time.Clock()
-        self.fps = 500
+        self.fps = 165
         self.generation = 0
         self.paused = True
         self.randomize = False
@@ -80,7 +81,10 @@ class Game:
             self.clock.tick(self.fps)
             self.update_count()
             self.events()
-            self.update()
+            try:
+                self.update()
+            except IndexError as e:
+                print (e)
             self.draw()
 
     def speed_up_game(self):
@@ -139,6 +143,8 @@ class Game:
                     self.slow_down_game()
                 if event.key == pygame.K_h:
                     self.toggle_text()
+                if event.key == pygame.K_ESCAPE:
+                    self.running = False
                 
     def update(self):
         if self.randomize:
@@ -175,16 +181,19 @@ class Game:
             self.grid.update()
 
         if self.place:
-            pos = pygame.mouse.get_pos()
-            x = int(pos[0] / self.cell_size)
-            y = int(pos[1] / self.cell_size)
-            if self.grid.get_cell(x, y).get_alive():
-                pass
-            else:
-                self.grid.get_cell(x, y).set_alive()
+            try:
+                pos = pygame.mouse.get_pos()
+                x = int(pos[0] / self.cell_size)
+                y = int(pos[1] / self.cell_size)
+                if self.grid.get_cell(x, y).get_alive():
+                    pass
+                else:
+                    self.grid.get_cell(x, y).set_alive()
 
-            if not pygame.key.get_pressed()[pygame.K_e] and not pygame.mouse.get_pressed()[0]:
-                self.place = False
+                if not pygame.key.get_pressed()[pygame.K_e] and not pygame.mouse.get_pressed()[0]:
+                    self.place = False
+            except AttributeError:
+                pass
 
         if self.remove:
             pos = pygame.mouse.get_pos()
@@ -229,6 +238,7 @@ class Game:
             self.draw_text('Generation: ' + str(self.generation), 23, self.text_colour, 10, 10)
             self.draw_text('Update Speed: ' + str(100 - self.update_delay) + '/100', 23, self.text_colour, 10, 40)
 
+            
             self.draw_text(str(self.controls[0]), 12, self.text_colour, 10, 100)
             self.draw_text(str(self.controls[1]), 12, self.text_colour, 10, 120)
             self.draw_text(str(self.controls[2]), 12, self.text_colour, 10, 140)
@@ -241,6 +251,8 @@ class Game:
             self.draw_text(str(self.controls[9]), 12, self.text_colour, 10, 280)
             self.draw_text(str(self.controls[10]), 12, self.text_colour, 10, 300)
             self.draw_text(str(self.controls[11]), 12, self.text_colour, 10, 320)
+            self.draw_text(str(self.controls[12]), 12, self.text_colour, 10, 340)
+            
 
         pygame.display.update()
 
@@ -254,8 +266,6 @@ class Game:
             self.text = False
         else:
             self.text = True
-
-
 
     def start(self):
         self.run()
@@ -345,7 +355,7 @@ class Cell:
 
 
 if __name__ == '__main__':
-    game = Game(1920, 1080, 30)
+    game = Game(1920, 1080, 40)
     game.start()
     pygame.quit()
 
