@@ -1,5 +1,7 @@
 import pygame
 import random
+import time
+import update_method
 
 class Game:
     def __init__(self, width, height, cell_size):
@@ -23,13 +25,15 @@ class Game:
         self.width = width
         self.height = height
         self.cell_size = cell_size
-        #self.screen = pygame.display.set_mode((self.width, self.height), pygame.FULLSCREEN)
-        self.screen = pygame.display.set_mode((self.width, self.height))
+        self.screen = pygame.display.set_mode((self.width, self.height), pygame.FULLSCREEN)
+        #self.screen = pygame.display.set_mode((self.width, self.height))
         self.grid = Grid(self.width, self.height, self.cell_size, self.screen)
         self.running = True
         self.clock = pygame.time.Clock()
         self.fps = 165
         self.generation = 0
+        self.framesPerSecondCounter = 0
+        self.lastTimeCheck = 0
         self.paused = True
         self.randomize = False
         self.clear = False
@@ -85,6 +89,7 @@ class Game:
                 self.update()
             except IndexError as e:
                 print (e)
+            self.calcFramesPerSecond()
             self.draw()
 
     def speed_up_game(self):
@@ -145,7 +150,14 @@ class Game:
                     self.toggle_text()
                 if event.key == pygame.K_ESCAPE:
                     self.running = False
-                
+
+    def calcFramesPerSecond(self):
+        self.framesPerSecondCounter += 1
+        if time.time() - self.lastTimeCheck >= 0.2:
+            self.lastTimeCheck = time.time()
+            print ("FPS: " + str(self.framesPerSecondCounter/0.2))
+            self.framesPerSecondCounter = 0
+
     def update(self):
         if self.randomize:
             for i in range(self.grid.cell_width):
@@ -206,19 +218,7 @@ class Game:
                 self.remove = False
                     
         if not self.paused and self.counter == self.update_delay:
-            for i in range(self.grid.cell_width):
-                for j in range(self.grid.cell_height):
-                    num_neighbors = self.grid.get_cell(i, j).get_num_neighbors()
-                    if self.grid.get_cell(i, j).get_alive():
-                        if num_neighbors < 2 or num_neighbors > 3:
-                            self.grid.get_cell(i, j).set_next_dead()
-                        else:
-                            self.grid.get_cell(i, j).set_next_alive()
-                    else:
-                        if num_neighbors == 3:
-                            self.grid.get_cell(i, j).set_next_alive()
-                        else:
-                            self.grid.get_cell(i, j).set_next_dead()
+            update_method.basic_search(self)
             self.grid.update()
             self.generation += 1
 
@@ -355,7 +355,12 @@ class Cell:
 
 
 if __name__ == '__main__':
-    game = Game(1920, 1080, 40)
+    #get screen size
+    import ctypes
+    user32 = ctypes.windll.user32
+    screen_width = user32.GetSystemMetrics(0)
+    screen_height = user32.GetSystemMetrics(1)
+    game = Game(screen_width, screen_height, 80)
     game.start()
     pygame.quit()
 
