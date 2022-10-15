@@ -25,8 +25,8 @@ class Game:
         self.width = width
         self.height = height
         self.cell_size = cell_size
-        self.screen = pygame.display.set_mode((self.width, self.height), pygame.FULLSCREEN)
-        #self.screen = pygame.display.set_mode((self.width, self.height))
+        #self.screen = pygame.display.set_mode((self.width, self.height), pygame.FULLSCREEN)
+        self.screen = pygame.display.set_mode((self.width, self.height))
         self.grid = Grid(self.width, self.height, self.cell_size, self.screen)
         self.running = True
         self.clock = pygame.time.Clock()
@@ -47,6 +47,7 @@ class Game:
         self.text_colour = (255, 255, 255)
         self.text = True
         self.setup()
+        print (self.grid.cell_width, self.grid.cell_height)
 
     def random_colour(self):
         def random_colour_value():
@@ -360,7 +361,7 @@ if __name__ == '__main__':
     user32 = ctypes.windll.user32
     screen_width = user32.GetSystemMetrics(0)
     screen_height = user32.GetSystemMetrics(1)
-    game = Game(screen_width, screen_height, 80)
+    game = Game(600, 600 , 6)
     game.start()
     pygame.quit()
 
