@@ -18,7 +18,7 @@ class Game:
         self.pause = True
         self.draw = False
         self.erase = False
-        self.background = (20,20,34)
+        self.background = (30,30, 50)
         self.backgroundPaused = (20,20,34)
         self.backgroundRunning = (20,20,34)
         self.cellColor = (155,255,60)
@@ -57,7 +57,7 @@ class Game:
                     pygame.draw.rect(self.screen, self.background, (i*self.size, j*self.size, self.size, self.size))
 
     def progressBoard(self):
-        self.board = conway.high_life(self.board)
+        self.board = conway.conway(self.board)
 
     def run(self):
         while self.running:
@@ -100,5 +100,5 @@ class Game:
 
 
 if __name__ == "__main__":
-    game = Game(100, 100, 4)
+    game = Game(300, 100, 8)
     game.run()
