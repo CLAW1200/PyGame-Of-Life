@@ -8,7 +8,7 @@ Now using a convolution
 
 class Game:
     def __init__(self, m, n, size):
-        self.size = size
+        self.size = round((1/m) * size)
         self.m = m
         self.n = n
         self.board = np.zeros((self.m, self.n))
@@ -18,12 +18,8 @@ class Game:
         self.pause = True
         self.draw = False
         self.erase = False
-        self.background = (30,30, 50)
-        self.backgroundPaused = (20,20,34)
-        self.backgroundRunning = (20,20,34)
-        self.cellColor = (155,255,60)
-        self.cellColorPaused = (255,255,255)
-        self.cellColorRunning = (155,255,60)
+        self.background = (25,25,25)
+        self.cellColor = (255,255,0)
         self.updateGrid()
 
     def painter(self):
@@ -45,17 +41,16 @@ class Game:
     def update(self):
         self.painter()
         if not self.pause:
+            
             self.progressBoard()
             self.updateGrid()
 
     def updateGrid(self):
+        self.screen.fill(self.background)
         for i in range(self.m):
             for j in range(self.n):
                 if self.board[i][j] == 1:
                     pygame.draw.rect(self.screen, self.cellColor, (i*self.size, j*self.size, self.size, self.size))
-                else:
-                    pygame.draw.rect(self.screen, self.background, (i*self.size, j*self.size, self.size, self.size))
-
     def progressBoard(self):
         self.board = conway.conway(self.board)
 
@@ -94,11 +89,15 @@ class Game:
                         self.draw = False
                     if event.button == 3:
                         self.erase = False
+            
+            
+
             self.update()
+            #background
             pygame.display.flip()
             self.clock.tick(165)
 
 
 if __name__ == "__main__":
-    game = Game(300, 100, 8)
+    game = Game(100, 100, 300)
     game.run()
