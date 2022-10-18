@@ -93,7 +93,6 @@ class Game:
             
 
             self.update()
-            #background
             pygame.display.flip()
             self.clock.tick(165)
 
