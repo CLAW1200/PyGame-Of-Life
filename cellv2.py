@@ -12,7 +12,7 @@ class Game:
         self.m = m
         self.n = n
         self.board = np.zeros((self.m, self.n))
-        self.screen = pygame.display.set_mode((m*self.size, n*self.size))
+        self.screen = pygame.display.set_mode((m*self.size, n*self.size), pygame.FULLSCREEN)
         self.clock = pygame.time.Clock()
         self.running = True
         self.pause = True
@@ -30,8 +30,21 @@ class Game:
 
     def drawing(self):
         x, y = pygame.mouse.get_pos()
-        self.board[x//self.size][y//self.size] = 1
-        self.updateGrid()
+        try:
+            #3x3
+            self.board[x//self.size][y//self.size] = 1
+            self.board[x//self.size+1][y//self.size] = 1
+            self.board[x//self.size-1][y//self.size] = 1
+            self.board[x//self.size][y//self.size+1] = 1
+            self.board[x//self.size][y//self.size-1] = 1
+            self.board[x//self.size+1][y//self.size+1] = 1
+            self.board[x//self.size-1][y//self.size-1] = 1
+            self.board[x//self.size+1][y//self.size-1] = 1
+            self.board[x//self.size-1][y//self.size+1] = 1
+            self.updateGrid()
+        except IndexError:
+            pass
+            
 
     def erasing(self):
         x, y = pygame.mouse.get_pos()
@@ -70,9 +83,12 @@ class Game:
                         self.board = np.zeros((self.m, self.n))
                         self.updateGrid()
 
+                    if event.key == pygame.K_p:
+                        self.cellColor = np.random.randint(0,255,3)
+                        self.updateGrid()
 
                     if event.key == pygame.K_r:
-                        self.board = np.random.random(self.m*self.n).reshape((self.m, self.n)).round()
+                        self.board = (np.random.random(self.m*self.n).reshape(((self.m, self.n)))+0).round()
                         self.updateGrid()
 
 
@@ -98,5 +114,5 @@ class Game:
 
 
 if __name__ == "__main__":
-    game = Game(100, 100, 300)
+    game = Game(10, 10, 1000)
     game.run()
